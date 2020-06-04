@@ -1,0 +1,75 @@
+<!doctype html>
+<!--
+  Popup shown when extension icon is clicked
+ -->
+<html>
+  <head>
+      <script src="popup.js"></script>
+    <title>Getting Started Extension's Popup</title>
+    <style>
+      body {
+        margin: 0;
+        /* width: 400px; */
+      }
+      .header {
+       background-color:powderblue;
+       padding: 15px;
+       color: white;
+       text-align: center;
+       font-family:verdana;
+       }
+      .header:after {
+       content: "";
+       display: table;
+      clear: both;
+      }
+     input {
+      margin: 0;
+      display: inline-block;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      /* width: 75%; */
+      padding: 10px;
+      float: left;
+      font-size: 16px;
+    }
+   .switchBtn {
+      padding: 10px;
+      width: 200px;
+      background: #d9d9d9;
+      color: #555;
+      float: center;
+      text-align: center;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+      border-radius: 0;
+      font-family:courier;
+   }
+   .switchBtn:hover {
+    background-color: #bbb;
+   }
+   .urlBtn {
+     padding: 10px;
+     background: #d9d9d9;
+     color: #555;
+     font-size: 14px;
+     font-family:helvetica;
+     float: none;
+     cursor: pointer;
+   }
+    </style>
+  </head>
+  <body>
+  <div id="titleHeader" class="header">
+  <h1 style="margin:5px">Enter an RSS website url</h1>
+  <!-- <button id="notifbutton" class="switchBtn">Switch to see RSS Feed</button> -->
+</div>
+       <input type="text" id="userinput1" placeholder="Enter the url of an RSS Feed..."></input>
+      <button id="setbutton" class="switchBtn">Set</button>
+      <button id="deletebutton" class="switchBtn">Delete</button>
+      <br><br>
+
+  </body>
+</html>
