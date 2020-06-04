@@ -71,28 +71,28 @@ function renderRSS(RSS_URL) {
       }
       items.forEach((item) => {
         var listItem = document.createElement('li');
-        var inputValue = item.querySelector('title').textContent;
-        var t = document.createTextNode(inputValue);
-        listItem.appendChild(t);
-        // listItem.textContent = item.querySelector('title').textContent;
+        //var inputValue = item.querySelector('title').textContent;
+        //var t = document.createTextNode(inputValue);
+        //listItem.appendChild(t);
+        listItem.textContent = item.querySelector('title').textContent;
 
         var pagelink = document.createElement('a'); //make a hyperlink button
         pagelink.href = item.querySelector('link').textContent;
         pagelink.className = "button";
         pagelink.textContent = "Link"; //text on button
         pagelink.target = "_blank"; //open link in new window
-        //listItem.appendChild(pagelink);
-        pagelink.appendChild(listItem);
+        listItem.appendChild(pagelink);
+        //pagelink.appendChild(listItem);
 
-        document.getElementById('newsList').appendChild(pagelink);
-        //document.getElementById('newsList').appendChild(listItem);
+        //document.getElementById('newsList').appendChild(pagelink);
+        document.getElementById('newsList').appendChild(listItem);
 
         var span = document.createElement("SPAN"); //add the x button to the link
         var txt = document.createTextNode("\u00D7");
         span.className = "close";
         span.appendChild(txt);
         listItem.appendChild(span);
-        for (i = 0; i < close.length; i++) {
+        for (var i = 0; i < close.length; i++) {
           close[i].onclick = function() {
             var div = this.parentElement;
             div.style.display = "none";
