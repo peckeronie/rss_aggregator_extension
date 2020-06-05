@@ -60,7 +60,7 @@ function renderRSS(RSS_URL) {
     })
     .then(str => {
       var domParser = new DOMParser();
-      var parsedtext = domParser.parseFromString(str, "text/xml");
+      var parsedtext = domParser.parseFromString(str, "application/xhtml+xml");
       return parsedtext;
     })
     .then(RSS_Str => {
@@ -77,7 +77,48 @@ function renderRSS(RSS_URL) {
         listItem.textContent = item.querySelector('title').textContent;
 
         var pagelink = document.createElement('a'); //make a hyperlink button
-        pagelink.href = item.querySelector('link').textContent;
+        var itemurl = item.querySelector('link');
+        var pattern = /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
+        if (itemurl !== null) {
+          chrome.extension.getBackgroundPage().console.log("Item url selector: ", itemurl);
+          if (pattern.test(String(itemurl))){
+            chrome.extension.getBackgroundPage().console.log("Url is valid");
+          }else{
+              //querying for href that starts and ends with quotations
+              itemurl = item.querySelector('link').getAttribute("href");
+              chrome.extension.getBackgroundPage().console.log("Item url href: ", itemurl);
+              chrome.extension.getBackgroundPage().console.log("Item url href selector: ", itemurl);
+              if (itemurl == null || itemurl == ''){
+                chrome.extension.getBackgroundPage().console.log("Url href does not exist");
+              }
+
+          }
+        }
+      //   else{
+      //     chrome.extension.getBackgroundPage().console.log("Url is invalid");
+      //     itemurl = item.querySelector('link[href^="]');
+      //     chrome.extension.getBackgroundPage().console.log("Item url: ", itemurl);
+      //     //if <link></link> doesn't exist, search for <link href=.../>
+      //
+      //     var linkRegex = /(?<=<link ).*(?=\/>)/;
+      //     var hrefRegex = /(?<=href=").*(?=")/;
+      //     var matched = item.exec(linkRegex);
+      //     chrome.extension.getBackgroundPage().console.log("Link regex: ", matched);
+      //     if(matched === null){
+      //       chrome.extension.getBackgroundPage().console.log("Link regex is null");
+      //     }else{
+      //       chrome.extension.getBackgroundPage().console.log(matched[0].exec(hrefRegex));
+      //
+      //       // if (pattern.test(itemurl)){
+      //       //   chrome.extension.getBackgroundPage().console.log("Searching by link href");
+      //       //   chrome.extension.getBackgroundPage().console.log("Item url: ", itemurl);
+      //       // }else{
+      //       //   chrome.extension.getBackgroundPage().console.log("Cannot parse link href");
+      //       // }
+      //     }
+      // }
+        //pagelink.href = item.querySelector('link').textContent;
+        pagelink.href = itemurl;
         pagelink.className = "button";
         pagelink.textContent = "Link"; //text on button
         pagelink.target = "_blank"; //open link in new window
