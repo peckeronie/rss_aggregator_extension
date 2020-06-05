@@ -81,17 +81,16 @@ function renderRSS(RSS_URL) {
         var pattern = /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
         if (itemurl !== null) {
           chrome.extension.getBackgroundPage().console.log("Item url selector: ", itemurl);
-          if (pattern.test(String(itemurl))){
-            chrome.extension.getBackgroundPage().console.log("Url is valid");
+          if (pattern.test(itemurl.textContent)){
+            itemurl = itemurl.textContent;
+            chrome.extension.getBackgroundPage().console.log("Url is valid", itemurl);
           }else{
-              //querying for href that starts and ends with quotations
+              //if <link>"..."</link> doesn't exist, search for <link href="..."/>
               itemurl = item.querySelector('link').getAttribute("href");
               chrome.extension.getBackgroundPage().console.log("Item url href: ", itemurl);
-              chrome.extension.getBackgroundPage().console.log("Item url href selector: ", itemurl);
               if (itemurl == null || itemurl == ''){
                 chrome.extension.getBackgroundPage().console.log("Url href does not exist");
               }
-
           }
         }
       //   else{
