@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
     button3.addEventListener('click', function() {
         switchPopUp();
     });
+
 });
 
 function switchPopUp() { //switch back to the entering url screen
@@ -16,6 +17,7 @@ function switchPopUp() { //switch back to the entering url screen
   chrome.browserAction.setPopup({
     popup: 'popup.html'
   });
+  window.location.href = 'popup.html';
 }
 
 // Create a "close" button and append it to each list item
@@ -178,7 +180,9 @@ chrome.storage.local.get("webToDisplay", function(result) {
 //
 //   }
 // }, false);
-
+chrome.browserAction.setPopup({popup: 'popup_notifs_list.html'}, function(){
+  chrome.extension.getBackgroundPage().console.log("Popup_notifs_list.html set as popup");
+});
 
 //clear the news badge when you open up the popup
 chrome.browserAction.setBadgeText({

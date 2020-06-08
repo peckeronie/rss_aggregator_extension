@@ -7,15 +7,19 @@ var websiteToDisplay = "";
 function PopupNews(website){
   website.addEventListener('click', function() {
     chrome.extension.getBackgroundPage().console.log("Website button clicked");
-    chrome.browserAction.setPopup({popup: 'popup_notifs_list.html'}, function(){
+
       websiteToDisplay = String(website.innerHTML);
       chrome.extension.getBackgroundPage().console.log("Website clicked,", websiteToDisplay);
       chrome.storage.local.remove("webToDisplay", function() {
         chrome.storage.local.set({'webToDisplay': websiteToDisplay}, function() {
           chrome.extension.getBackgroundPage().console.log(websiteToDisplay, " set into storage");
+          chrome.browserAction.setPopup({popup: 'popup_notifs_list.html'}, function(){
+            window.location.href = 'popup_notifs_list.html';
+          });
+
         });
       });
-    });
+    // });
   });
 }
 
@@ -36,6 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
     for (var i = 0; i < allWebsiteButtons.length; i++) {
       PopupNews(allWebsiteButtons[i]);
     }
+
 });
 
 
@@ -160,7 +165,7 @@ function getRSS(RSS_URL,stored) {
       });
 
     }).catch(function(error){
-      console.log('Request failed', error);
+      chrome.extension.getBackgroundPage().console.log('Request failed', error);
     });
 
 }
@@ -190,7 +195,9 @@ function checkUserInput() {
 }
 
 generateWebsiteButtons();
-
+// chrome.browserAction.setPopup({popup: 'popup.html'}, function(){
+//   chrome.extension.getBackgroundPage().console.log("Popup.html set as popup");
+// });
 
 
 
