@@ -2,6 +2,7 @@
 var websiteToDisplay = "";
 // document.getElementById('notifbutton').addEventListener('click', showNews);
 // document.getElementById("setbutton").addEventListener("click", checkUserInput);
+var backgroundArray = chrome.extension.getBackgroundPage().newNotifsarray;
 
 //add on-click event listener to each website button
 function PopupNews(website){
@@ -91,7 +92,33 @@ function generateWebsiteButton(websiteURL){
   }
 }
 
-function generateWebsiteButtons(){
+function makeNotifs(){
+
+  var s = "";
+  var itemsProcessed = 0;
+  chrome.extension.getBackgroundPage().console.log("Current background array: ", backgroundArray);
+  if(backgroundArray.length > 0){
+    backgroundArray.forEach(function (item) {
+        s = s + item + ", ";
+        itemsProcessed++;
+        if(itemsProcessed === backgroundArray.length) {
+          var str = s.substring(0, s.length - 2);
+          var str2 = "New notifs from: ";
+          var combined = str2.concat(str);
+          var para = document.createElement("P");                       // Create a <p> node
+          var t = document.createTextNode(combined);      // Create a text node
+          para.appendChild(t);        // Append the text to <p>
+          document.getElementById("titleHeader").appendChild(para);   // Append <p> to <div> element
+        }
+    });
+  }else if(backgroundArray == null){
+    chrome.extension.getBackgroundPage().console.log("Background array is null");
+  }else{
+    chrome.extension.getBackgroundPage().console.log("Background array is empty");
+  }
+}
+
+function generateWebsiteButtons(callback){
   chrome.extension.getBackgroundPage().console.log("Generating buttons on popup");
   chrome.storage.local.get("websiteURLs", function(result) {
     // console.log("Old keys in storage:");
@@ -103,6 +130,7 @@ function generateWebsiteButtons(){
       PopupNews(allWebsiteButtons[i]);
     }
   });
+  callback();
 }
 
 //make an array of [title1, title2...] for the new RSS posts from a website
@@ -194,7 +222,7 @@ function checkUserInput() {
   }
 }
 
-generateWebsiteButtons();
+generateWebsiteButtons(makeNotifs);
 // chrome.browserAction.setPopup({popup: 'popup.html'}, function(){
 //   chrome.extension.getBackgroundPage().console.log("Popup.html set as popup");
 // });

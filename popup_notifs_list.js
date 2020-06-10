@@ -20,26 +20,26 @@ function switchPopUp() { //switch back to the entering url screen
   window.location.href = 'popup.html';
 }
 
-// Create a "close" button and append it to each list item
-var myNodelist = document.getElementsByTagName("LI");
-var i;
-for (i = 0; i < myNodelist.length; i++) {
-  var span = document.createElement("SPAN");
-  var txt = document.createTextNode("\u00D7");
-  span.className = "close";
-  span.appendChild(txt);
-  myNodelist[i].appendChild(span);
-}
-
-// Click on a close button to hide the current list item
-var close = document.getElementsByClassName("close");
-var i;
-for (i = 0; i < close.length; i++) {
-  close[i].onclick = function() {
-    var div = this.parentElement;
-    div.style.display = "none";
-  };
-}
+// // Create a "close" button and append it to each list item
+// var myNodelist = document.getElementsByTagName("LI");
+// var i;
+// for (i = 0; i < myNodelist.length; i++) {
+//   var span = document.createElement("SPAN");
+//   var txt = document.createTextNode("\u00D7");
+//   span.className = "close";
+//   span.appendChild(txt);
+//   myNodelist[i].appendChild(span);
+// }
+//
+// // Click on a close button to hide the current list item
+// var close = document.getElementsByClassName("close");
+// var i;
+// for (i = 0; i < close.length; i++) {
+//   close[i].onclick = function() {
+//     var div = this.parentElement;
+//     div.style.display = "none";
+//   };
+// }
 
 //For a specific website, create new items from RSS feed to add to the html list
 function renderRSS(RSS_URL) {
@@ -82,43 +82,20 @@ function renderRSS(RSS_URL) {
         var itemurl = item.querySelector('link');
         var pattern = /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
         if (itemurl !== null) {
-          chrome.extension.getBackgroundPage().console.log("Item url selector: ", itemurl);
+          //chrome.extension.getBackgroundPage().console.log("Item url selector: ", itemurl);
           if (pattern.test(itemurl.textContent)){
             itemurl = itemurl.textContent;
             chrome.extension.getBackgroundPage().console.log("Url is valid", itemurl);
           }else{
               //if <link>"..."</link> doesn't exist, search for <link href="..."/>
               itemurl = item.querySelector('link').getAttribute("href");
-              chrome.extension.getBackgroundPage().console.log("Item url href: ", itemurl);
+              //chrome.extension.getBackgroundPage().console.log("Item url href: ", itemurl);
               if (itemurl == null || itemurl == ''){
                 chrome.extension.getBackgroundPage().console.log("Url href does not exist");
               }
           }
         }
-      //   else{
-      //     chrome.extension.getBackgroundPage().console.log("Url is invalid");
-      //     itemurl = item.querySelector('link[href^="]');
-      //     chrome.extension.getBackgroundPage().console.log("Item url: ", itemurl);
-      //     //if <link></link> doesn't exist, search for <link href=.../>
-      //
-      //     var linkRegex = /(?<=<link ).*(?=\/>)/;
-      //     var hrefRegex = /(?<=href=").*(?=")/;
-      //     var matched = item.exec(linkRegex);
-      //     chrome.extension.getBackgroundPage().console.log("Link regex: ", matched);
-      //     if(matched === null){
-      //       chrome.extension.getBackgroundPage().console.log("Link regex is null");
-      //     }else{
-      //       chrome.extension.getBackgroundPage().console.log(matched[0].exec(hrefRegex));
-      //
-      //       // if (pattern.test(itemurl)){
-      //       //   chrome.extension.getBackgroundPage().console.log("Searching by link href");
-      //       //   chrome.extension.getBackgroundPage().console.log("Item url: ", itemurl);
-      //       // }else{
-      //       //   chrome.extension.getBackgroundPage().console.log("Cannot parse link href");
-      //       // }
-      //     }
-      // }
-        //pagelink.href = item.querySelector('link').textContent;
+
         pagelink.href = itemurl;
         pagelink.className = "button";
         pagelink.textContent = "Link"; //text on button
@@ -129,17 +106,17 @@ function renderRSS(RSS_URL) {
         //document.getElementById('newsList').appendChild(pagelink);
         document.getElementById('newsList').appendChild(listItem);
 
-        var span = document.createElement("SPAN"); //add the x button to the link
-        var txt = document.createTextNode("\u00D7");
-        span.className = "close";
-        span.appendChild(txt);
-        listItem.appendChild(span);
-        for (var i = 0; i < close.length; i++) {
-          close[i].onclick = function() {
-            var div = this.parentElement;
-            div.style.display = "none";
-          };
-        }
+        // var span = document.createElement("SPAN"); //add the x button to the link
+        // var txt = document.createTextNode("\u00D7");
+        // span.className = "close";
+        // span.appendChild(txt);
+        // listItem.appendChild(span);
+        // for (var i = 0; i < close.length; i++) {
+        //   close[i].onclick = function() {
+        //     var div = this.parentElement;
+        //     div.style.display = "none";
+        //   };
+        // }
       });
     }).catch(function(error){
       console.log('Request failed', error);

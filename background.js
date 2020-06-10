@@ -4,6 +4,7 @@
 var dict = {};
 var newCount = 0;
 var counter = 0;
+var newNotifsarray = [];
 
 chrome.storage.local.clear(function() {
   chrome.extension.getBackgroundPage().console.log('Storage cleared');
@@ -26,6 +27,10 @@ chrome.storage.local.set({
 chrome.storage.local.set({'webToDisplay': ""}, function() {
   chrome.extension.getBackgroundPage().console.log("webToDisplay initialized into storage");
 });
+
+// chrome.storage.local.set({'newNotifs': newNotifsarray}, function() {
+//   chrome.extension.getBackgroundPage().console.log("{ 'newNotifs' : [] } initialized into storage");
+// });
 
 function isEmpty(obj) {
     for(var key in obj) {
@@ -53,6 +58,9 @@ function compareRSS(RSS_URL, old_RSS) {
   chrome.extension.getBackgroundPage().console.log("Fetching from background.js");
   var urlText = String(RSS_URL);
   var newRSSarray = [];
+
+
+  //var newNotifsarray = [];
   fetch(urlText)
     .then(response => {
       if (response.ok) {
@@ -82,6 +90,9 @@ function compareRSS(RSS_URL, old_RSS) {
         console.log("First post in storage,", old_RSS[0]);
         //compare the titles of most recent RSS posts
         if (latest != old_RSS[0]) {
+          newNotifsarray.push(String(RSS_URL));
+          console.log("Pushing into newNotifsarray");
+          console.log(newNotifsarray);
           newCount = newCount + 1;
           //push latest posts into newRSSarray
           items.forEach(function(userItem) {
@@ -129,18 +140,26 @@ function compareRSS(RSS_URL, old_RSS) {
                 }
               }
               counter++;
+              //run this at the end
               if (counter == Object.keys(result.websiteURLs).length){
-                setNotifBadge(newCount);
-                newCount = 0;
-                chrome.extension.getBackgroundPage().console.log("compareRSS completed in background.js");
-                counter = 0; //reset counter
+                  setNotifBadge(newCount);
+                  newCount = 0;
+                  chrome.extension.getBackgroundPage().console.log("compareRSS completed in background.js");
+                  counter = 0; //reset counter
+
+                  // console.log("old newNotifs array:");
+                  // console.log(result.newNotifs);
+                  // for (var i in result.newNotifs) {
+                  //   chrome.extension.getBackgroundPage().console.log(i);
+                  // }
+
               }
             });
           });
         });
       }
-
     })
+
 
     .catch(function(error){
       console.log('Error: ', error);
@@ -149,6 +168,8 @@ function compareRSS(RSS_URL, old_RSS) {
 }
 
 function checkForNews(){
+  newNotifsarray.length = 0; //empty out the array every minute
+  console.log("New notifs array: ", newNotifsarray);
   chrome.storage.local.get("websiteURLs", function(result) {
     //var websiteDict = result.websiteURLs;
     if (isEmpty(result.websiteURLs)) { //website dict is empty
@@ -163,6 +184,7 @@ function checkForNews(){
         compareRSS(key, result.websiteURLs[key]);
 
       });
+
 
     }
   });
